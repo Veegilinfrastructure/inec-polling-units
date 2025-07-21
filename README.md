@@ -24,6 +24,9 @@ This repository provides data, maps and updates on INEC polling units across Nig
 
 ## Acknowledgement
 This project draws inspiration from [mykeels](https://github.com/mykeels/inec-polling-units) resources repository. Credits to the author. We also acknowledge [INEC](https://www.inecnigeria.org/elections/polling-units/) for making the polling units data available. 
+
+## Contribution
+Feel free to make [contribution](https://github.com/Veegilinfrastructure/inec-polling-units/issues) or report an issue. Your suggestions and ideas are welcome.
       
 <!-- End of PU stats -->
 
