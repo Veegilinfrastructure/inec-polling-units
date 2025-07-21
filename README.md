@@ -1,6 +1,6 @@
 # INEC Polling Units (Nigeria)
 
-This is a modified version of the original [inec-polling-units](https://github.com/mykeels/inec-polling-units) dataset and tools retrieved from https://www.inecnigeria.org/elections/polling-units/
+This is a modified version of the original inec-polling-units dataset and tools retrieved from https://www.inecnigeria.org/elections/polling-units/
 
 ## Maintainer
 
@@ -8,8 +8,8 @@ This version is maintained by **[Collins](https://github.com/Veegilinfrastructur
 
 ## Purpose
 
-This repository provides data and scripts for managing INEC polling units across Nigeria’s 36 states and the FCT.
-
+This repository provides data, maps and updates on INEC polling units across Nigeria’s 36 states and the FCT.
+- Click this link to view **[maps and data](https://veegilinfrastructure.github.io/inec-polling-units/)**  on INEC polling units  
 
 ## Polling Unit Stats
 
@@ -21,6 +21,9 @@ This repository provides data and scripts for managing INEC polling units across
 | Location Data Completion (%) | 67.54% |
 
 [Get started exploring the data](./states#readme).
+
+## Acknowledgement
+This project draws inspiration from [mykeels](https://github.com/mykeels/inec-polling-units) resources repository. Credits to the author. We also acknowledge [INEC](https://www.inecnigeria.org/elections/polling-units/) for making the polling units data available. 
       
 <!-- End of PU stats -->
 
