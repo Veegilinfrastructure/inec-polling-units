@@ -1,6 +1,6 @@
 # INEC Polling Units (Nigeria)
 
-This is a modified version of the original inec-polling-units dataset and tools retrieved from https://www.inecnigeria.org/elections/polling-units/
+This is a modified version of the original inec-polling-units project retrieved from https://www.inecnigeria.org/elections/polling-units/
 
 ## Maintainer
 
