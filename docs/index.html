@@ -29,7 +29,7 @@
 <body>
 
 <div id="controls">
-  <label for="stateSelector"><strong>Select a state:</strong></label>
+  <label for="stateSelector"><strong>Select a state to view polling units:</strong></label>
   <select id="stateSelector">
     <option value="">-- Choose a state --</option>
     <option value="abia">Abia</option>
@@ -117,7 +117,7 @@
         map.fitBounds(currentLayer.getBounds());
       })
       .catch(err => {
-        alert("Failed to load polling unit data for selected state.");
+        alert("Failed to load polling unit data for selected state contact Collins.");
         console.error(err);
       });
   });
