@@ -4,7 +4,7 @@ This is a modified version of the original inec-polling-units project retrieved 
 
 ## Maintainer
 
-This version is maintained by **[Collins](https://github.com/Veegilinfrastructure)**.
+This version is maintained by **[Collins](mailto:collins.ugwuozor@veegil.com)**.
 
 ## Purpose
 
