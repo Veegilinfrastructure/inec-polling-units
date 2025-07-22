@@ -9,7 +9,7 @@ This version is maintained by **[Collins](mailto:collins.ugwuozor@veegil.com)**.
 ## Purpose
 
 This repository provides data, maps and updates on INEC polling units across Nigeria’s 36 states and the FCT.
-- Click on **[map link](https://veegilinfrastructure.github.io/inec-polling-units/)** to view INEC polling units on an interactive map
+- Click on **[view project](https://veegilinfrastructure.github.io/inec-polling-units/)** to interact and learn more
 
 ## New Updates
 ```pgsql
