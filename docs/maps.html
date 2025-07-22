@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INEC Polling Units Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    #map {
+      height: 92vh;
+      width: 100%;
+    }
+    #controls {
+      padding: 10px;
+      background: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+    select {
+      font-size: 16px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+<div id="controls">
+  <label for="stateSelector"><strong>Select a state to view polling units:</strong></label>
+  <select id="stateSelector">
+    <option value="">-- Choose a state --</option>
+    <option value="abia">Abia</option>
+    <option value="adamawa">Adamawa</option>
+    <option value="akwa-ibom">Akwa Ibom</option>
+    <option value="anambra">Anambra</option>
+    <option value="bauchi">Bauchi</option>
+    <option value="bayelsa">Bayelsa</option>
+    <option value="benue">Benue</option>
+    <option value="borno">Borno</option>
+    <option value="cross-river">Cross River</option>
+    <option value="delta">Delta</option>
+    <option value="ebonyi">Ebonyi</option>
+    <option value="edo">Edo</option>
+    <option value="ekiti">Ekiti</option>
+    <option value="enugu">Enugu</option>
+    <option value="gombe">Gombe</option>
+    <option value="imo">Imo</option>
+    <option value="jigawa">Jigawa</option>
+    <option value="kaduna">Kaduna</option>
+    <option value="kano">Kano</option>
+    <option value="katsina">Katsina</option>
+    <option value="kebbi">Kebbi</option>
+    <option value="kogi">Kogi</option>
+    <option value="kwara">Kwara</option>
+    <option value="lagos">Lagos</option>
+    <option value="nasarawa">Nasarawa</option>
+    <option value="niger">Niger</option>
+    <option value="ogun">Ogun</option>
+    <option value="ondo">Ondo</option>
+    <option value="osun">Osun</option>
+    <option value="oyo">Oyo</option>
+    <option value="plateau">Plateau</option>
+    <option value="rivers">Rivers</option>
+    <option value="sokoto">Sokoto</option>
+    <option value="taraba">Taraba</option>
+    <option value="yobe">Yobe</option>
+    <option value="zamfara">Zamfara</option>
+    <option value="federal-capital-territory">FCT</option>
+  </select>
+</div>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
