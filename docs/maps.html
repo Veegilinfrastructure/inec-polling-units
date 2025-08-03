@@ -1,110 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Veegil Election Maps</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INEC Polling Units Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background-color: #111;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    #controls {
-      padding: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      background-color: #f9f9f9;
-    }
-
-    select {
-      padding: 0.5rem;
-      font-size: 1rem;
-    }
-
     #map {
-      height: 80vh;
+      height: 92vh;
+      width: 100%;
+    }
+    #controls {
+      padding: 10px;
+      background: #f9f9f9;
+      border-bottom: 1px solid #ccc;
+    }
+    select {
+      font-size: 16px;
+      padding: 5px;
+      margin: 5px 0;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
+<div id="controls">
+  <label for="stateSelector"><strong>Select a state:</strong></label><br />
+  <select id="stateSelector">
+    <option value="">-- Choose a state --</option>
+    <option value="abia">Abia</option>
+    <option value="adamawa">Adamawa</option>
+    <option value="akwa-ibom">Akwa Ibom</option>
+    <option value="anambra">Anambra</option>
+    <option value="bauchi">Bauchi</option>
+    <option value="bayelsa">Bayelsa</option>
+    <option value="benue">Benue</option>
+    <option value="borno">Borno</option>
+    <option value="cross-river">Cross River</option>
+    <option value="delta">Delta</option>
+    <option value="ebonyi">Ebonyi</option>
+    <option value="edo">Edo</option>
+    <option value="ekiti">Ekiti</option>
+    <option value="enugu">Enugu</option>
+    <option value="gombe">Gombe</option>
+    <option value="imo">Imo</option>
+    <option value="jigawa">Jigawa</option>
+    <option value="kaduna">Kaduna</option>
+    <option value="kano">Kano</option>
+    <option value="katsina">Katsina</option>
+    <option value="kebbi">Kebbi</option>
+    <option value="kogi">Kogi</option>
+    <option value="kwara">Kwara</option>
+    <option value="lagos">Lagos</option>
+    <option value="nasarawa">Nasarawa</option>
+    <option value="niger">Niger</option>
+    <option value="ogun">Ogun</option>
+    <option value="ondo">Ondo</option>
+    <option value="osun">Osun</option>
+    <option value="oyo">Oyo</option>
+    <option value="plateau">Plateau</option>
+    <option value="rivers">Rivers</option>
+    <option value="sokoto">Sokoto</option>
+    <option value="taraba">Taraba</option>
+    <option value="yobe">Yobe</option>
+    <option value="zamfara">Zamfara</option>
+    <option value="federal-capital-territory">FCT</option>
+  </select>
 
-  <header>
-    <h1>Veegil Election Maps</h1>
-    <small><strong>Empowering Citizens Through Data-Driven Democracy</strong></small>
-  </header>
+  <br />
 
-  <div id="controls">
-    <select id="stateSelector">
-      <option value="">Select State</option>
-      <option value="">-- Choose a state --</option>
-      <option value="abia">Abia</option>
-      <option value="adamawa">Adamawa</option>
-      <option value="akwa-ibom">Akwa Ibom</option>
-      <option value="anambra">Anambra</option>
-      <option value="bauchi">Bauchi</option>
-      <option value="bayelsa">Bayelsa</option>
-      <option value="benue">Benue</option>
-      <option value="borno">Borno</option>
-      <option value="cross-river">Cross River</option>
-      <option value="delta">Delta</option>
-      <option value="ebonyi">Ebonyi</option>
-      <option value="edo">Edo</option>
-      <option value="ekiti">Ekiti</option>
-      <option value="enugu">Enugu</option>
-      <option value="gombe">Gombe</option>
-      <option value="imo">Imo</option>
-      <option value="jigawa">Jigawa</option>
-      <option value="kaduna">Kaduna</option>
-      <option value="kano">Kano</option>
-      <option value="katsina">Katsina</option>
-      <option value="kebbi">Kebbi</option>
-      <option value="kogi">Kogi</option>
-      <option value="kwara">Kwara</option>
-      <option value="lagos">Lagos</option>
-      <option value="nasarawa">Nasarawa</option>
-      <option value="niger">Niger</option>
-      <option value="ogun">Ogun</option>
-      <option value="ondo">Ondo</option>
-      <option value="osun">Osun</option>
-      <option value="oyo">Oyo</option>
-      <option value="plateau">Plateau</option>
-      <option value="rivers">Rivers</option>
-      <option value="sokoto">Sokoto</option>
-      <option value="taraba">Taraba</option>
-      <option value="yobe">Yobe</option>
-      <option value="zamfara">Zamfara</option>
-      <option value="federal-capital-territory">FCT</option>
-    </select>
+  <label for="lgaSelector" class="hidden"><strong>Select LGA:</strong></label><br />
+  <select id="lgaSelector" class="hidden"></select>
 
-    <select id="lgaSelector" style="display: none;">
-      <option value="">Select LGA</option>
-    </select>   
+  <br />
 
-    <select id="wardSelector" style="display: none;">
-      <option value="">Select Ward</option>
-    </select>
-  </div>
+  <label for="wardSelector" class="hidden"><strong>Select Ward:</strong></label><br />
+  <select id="wardSelector" class="hidden"></select>
+</div>
 
-  <div id="map"></div>
+<div id="map"></div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Your Custom Script -->
-  <script src="script.js"></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
