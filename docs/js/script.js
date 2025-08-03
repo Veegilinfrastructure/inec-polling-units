@@ -6,36 +6,21 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let currentLayer;
 
-// Dropdown elements
 const stateSelector = document.getElementById("stateSelector");
 const lgaSelector = document.getElementById("lgaSelector");
 const wardSelector = document.getElementById("wardSelector");
 
-// Hide LGA and Ward selectors initially
-lgaSelector.style.display = "none";
-wardSelector.style.display = "none";
-
-// State selection logic
 stateSelector.addEventListener("change", function () {
   const selectedState = this.value;
+  if (!selectedState) return;
 
-  // Clear map and hide other dropdowns
   if (currentLayer) {
     map.removeLayer(currentLayer);
   }
-  lgaSelector.style.display = "none";
-  wardSelector.style.display = "none";
 
-  if (!selectedState) return;
-
-  // Fetch polling unit GeoJSON for selected state
-  const geojsonUrl = `geojson/${selectedState}.geojson`;
-
-  fetch(geojsonUrl)
+  fetch(`geojson/${selectedState}.geojson`)
     .then(response => {
-      if (!response.ok) {
-        throw new Error(`GeoJSON not found for ${selectedState}`);
-      }
+      if (!response.ok) throw new Error(`GeoJSON not found for ${selectedState}`);
       return response.json();
     })
     .then(data => {
@@ -49,21 +34,57 @@ stateSelector.addEventListener("change", function () {
       }).addTo(map);
       map.fitBounds(currentLayer.getBounds());
 
-      // Show LGA dropdown (optional future logic to populate LGAs)
-      lgaSelector.style.display = "inline-block";
+      populateDropdown(lgaSelector, [...new Set(data.features.map(f => f.properties.lga))]);
+      lgaSelector.disabled = false;
+      wardSelector.innerHTML = `<option value="">-- Choose Ward --</option>`;
+      wardSelector.disabled = true;
     })
     .catch(err => {
-      alert("Failed to load polling unit data for selected state. Contact Collins.");
+      alert("Failed to load polling unit data. Contact Collins.");
       console.error(err);
     });
 });
 
-// LGA change handler
 lgaSelector.addEventListener("change", function () {
   const selectedLGA = this.value;
-  if (selectedLGA) {
-    wardSelector.style.display = "inline-block";
-  } else {
-    wardSelector.style.display = "none";
+  if (!selectedLGA || !currentLayer) return;
+
+  const wards = new Set();
+  currentLayer.eachLayer(layer => {
+    if (layer.feature.properties.lga === selectedLGA) {
+      wards.add(layer.feature.properties.ward);
+    }
+  });
+
+  populateDropdown(wardSelector, [...wards]);
+  wardSelector.disabled = false;
+});
+
+wardSelector.addEventListener("change", function () {
+  const selectedWard = this.value;
+  if (!selectedWard || !currentLayer) return;
+
+  const bounds = [];
+  currentLayer.eachLayer(layer => {
+    const props = layer.feature.properties;
+    if (props.ward === selectedWard && props.lga === lgaSelector.value) {
+      bounds.push(layer.getBounds());
+      layer.openPopup();
+    }
+  });
+
+  if (bounds.length) {
+    const combinedBounds = bounds.reduce((acc, b) => acc.extend(b), bounds[0]);
+    map.fitBounds(combinedBounds);
   }
 });
+
+function populateDropdown(dropdown, items) {
+  dropdown.innerHTML = `<option value="">-- Choose --</option>`;
+  items.forEach(item => {
+    const opt = document.createElement("option");
+    opt.value = item;
+    opt.textContent = item;
+    dropdown.appendChild(opt);
+  });
+}
