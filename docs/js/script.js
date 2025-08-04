@@ -6,29 +6,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let currentLayer;
 
-// Dropdown elements
-const stateSelector = document.getElementById("stateSelector");
-const lgaSelector = document.getElementById("lgaSelector");
-const wardSelector = document.getElementById("wardSelector");
-
-// Hide LGA and Ward selectors initially
-lgaSelector.style.display = "none";
-wardSelector.style.display = "none";
-
-// State selection logic
-stateSelector.addEventListener("change", function () {
+document.getElementById("stateSelector").addEventListener("change", function () {
   const selectedState = this.value;
+  if (!selectedState) return;
 
-  // Clear map and hide other dropdowns
   if (currentLayer) {
     map.removeLayer(currentLayer);
   }
-  lgaSelector.style.display = "none";
-  wardSelector.style.display = "none";
 
-  if (!selectedState) return;
-
-  // Fetch polling unit GeoJSON for selected state
   const geojsonUrl = `geojson/${selectedState}.geojson`;
 
   fetch(geojsonUrl)
@@ -48,23 +33,9 @@ stateSelector.addEventListener("change", function () {
         }
       }).addTo(map);
       map.fitBounds(currentLayer.getBounds());
-
-      // Show LGA dropdown (optional future logic to populate LGAs)
-      lgaSelector.style.display = "inline-block";
     })
     .catch(err => {
       alert("Failed to load polling unit data for selected state. Contact Collins.");
       console.error(err);
     });
 });
-
-// LGA change handler
-lgaSelector.addEventListener("change", function () {
-  const selectedLGA = this.value;
-  if (selectedLGA) {
-    wardSelector.style.display = "inline-block";
-  } else {
-    wardSelector.style.display = "none";
-  }
-});
-
