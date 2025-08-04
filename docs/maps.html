@@ -1,40 +1,33 @@
+<!-- maps.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Veegil Election Maps</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Veegil Election Map</title>
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-  <header>
-    <h1 style="color: black; font-weight: bold;">Welcome to Veegil Election</h1>
-    <p style="font-weight: bold; font-size: 0.9em; color: black;">Empowering Citizens Through Data-Driven Democracy</p>
-  </header>
+  <h1>Welcome to Veegil Election</h1>
+  <h3><strong>Empowering Citizens Through Data-Driven Democracy</strong></h3>
 
-  <section class="controls">
+  <div id="controls">
     <label for="stateSelector">Select State:</label>
     <select id="stateSelector">
       <option value="">-- Choose State --</option>
-      <option value="abia">Abia</option>
-      <option value="adamawa">Adamawa</option>
-      <option value="jigawa">Jigawa</option>
-      <option value="kaduna">Kaduna</option>
-      <option value="kano">Kano</option>
-      <option value="zamfara">Zamfara</option>
     </select>
 
     <label for="lgaSelector">Select LGA:</label>
-    <select id="lgaSelector" disabled>
+    <select id="lgaSelector">
       <option value="">-- Choose LGA --</option>
     </select>
-  </section>
+  </div>
 
   <div id="map" style="height: 500px;"></div>
 
-  <script src="script.js"></script>
+  <!-- Load data and logic -->
+  <script src="js/states-lgas.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
-
