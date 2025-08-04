@@ -35,8 +35,8 @@ select {
   padding: 0.3em;
   font-size: 1em;
 }
-
 #map {
-  height: 80vh;
+  height: 500px;
   width: 100%;
+  margin-top: 1rem;
 }
