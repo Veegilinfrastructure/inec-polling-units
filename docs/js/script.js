@@ -6,37 +6,65 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let currentLayer;
 
-document.getElementById("stateSelector").addEventListener("change", function () {
+// Dropdown elements
+const stateSelector = document.getElementById("stateSelector");
+const lgaSelector = document.getElementById("lgaSelector");
+const wardSelector = document.getElementById("wardSelector");
+
+// Hide LGA and Ward selectors initially
+lgaSelector.style.display = "none";
+wardSelector.style.display = "none";
+
+// State selection logic
+stateSelector.addEventListener("change", function () {
   const selectedState = this.value;
 
-  // Populate LGA dropdown
-  const lgaSelector = document.getElementById("lgaSelector");
-  lgaSelector.innerHTML = `<option value="">-- Choose LGA --</option>`;
+  // Clear map and hide other dropdowns
+  if (currentLayer) {
+    map.removeLayer(currentLayer);
+  }
+  lgaSelector.style.display = "none";
+  wardSelector.style.display = "none";
 
-  if (selectedState && stateLgas[selectedState]) {
-    stateLgas[selectedState].forEach(lga => {
-      const opt = document.createElement("option");
-      opt.value = lga;
-      opt.textContent = lga;
-      lgaSelector.appendChild(opt);
+  if (!selectedState) return;
+
+  // Fetch polling unit GeoJSON for selected state
+  const geojsonUrl = `geojson/${selectedState}.geojson`;
+
+  fetch(geojsonUrl)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`GeoJSON not found for ${selectedState}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      currentLayer = L.geoJSON(data, {
+        onEachFeature: (feature, layer) => {
+          const props = feature.properties;
+          layer.bindPopup(
+            `<strong>${props.name}</strong><br>Ward: ${props.ward}<br>LGA: ${props.lga}<br>State: ${props.state}`
+          );
+        }
+      }).addTo(map);
+      map.fitBounds(currentLayer.getBounds());
+
+      // Show LGA dropdown (optional future logic to populate LGAs)
+      lgaSelector.style.display = "inline-block";
+    })
+    .catch(err => {
+      alert("Failed to load polling unit data for selected state. Contact Collins.");
+      console.error(err);
     });
+});
 
-    // Load map if GeoJSON exists
-    if (currentLayer) map.removeLayer(currentLayer);
-    const geojsonUrl = `geojson/${selectedState.toLowerCase()}.geojson`;
-
-    fetch(geojsonUrl)
-      .then(res => {
-        if (!res.ok) throw new Error("GeoJSON not found.");
-        return res.json();
-      })
-      .then(data => {
-        currentLayer = L.geoJSON(data).addTo(map);
-        map.fitBounds(currentLayer.getBounds());
-      })
-      .catch(err => {
-        alert("Could not load map data for the selected state.");
-        console.error(err);
-      });
+// LGA change handler
+lgaSelector.addEventListener("change", function () {
+  const selectedLGA = this.value;
+  if (selectedLGA) {
+    wardSelector.style.display = "inline-block";
+  } else {
+    wardSelector.style.display = "none";
   }
 });
+
