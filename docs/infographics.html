@@ -5,6 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Infographics | Veegil Election</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .infographics-container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+    .infographics-container img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      flex: 1;
+    }
+    .chart-container {
+      flex: 1;
+      background: #fff;
+      padding: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -33,11 +56,67 @@
       </p>
     </section>
 
-    <!-- Display Image -->
+    <!-- Side by side: Map Image + Chart -->
     <section>
-      <h2>Nigeria Geopolitical Map</h2>
-      <img src="images/nigeria_geopolitics.png" alt="Nigeria Geopolitical Map" style="max-width:100%; height:auto; border:1px solid #ccc; border-radius:8px;">
+      <h2>Nigeria Geopolitical Map & Representation</h2>
+      <div class="infographics-container">
+        <!-- Nigeria Geopolitical Map -->
+        <img src="images/nigeria_geopolitics.png" alt="Nigeria Geopolitical Map">
+
+        <!-- Interactive Chart -->
+        <div class="chart-container">
+          <canvas id="representationChart"></canvas>
+        </div>
+      </div>
     </section>
   </main>
+
+  <script>
+    const ctx = document.getElementById('representationChart').getContext('2d');
+    const representationChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["North Central", "North East", "North West", "South East", "South South", "South West"],
+        datasets: [
+          {
+            label: "Governors",
+            data: [6, 6, 7, 5, 6, 6], // dummy data
+            backgroundColor: "rgba(255, 99, 132, 0.6)"
+          },
+          {
+            label: "Senators",
+            data: [18, 18, 21, 15, 18, 18], // dummy data
+            backgroundColor: "rgba(54, 162, 235, 0.6)"
+          },
+          {
+            label: "House of Reps",
+            data: [50, 48, 92, 43, 55, 71], // dummy data
+            backgroundColor: "rgba(255, 206, 86, 0.6)"
+          },
+          {
+            label: "House of Assembly",
+            data: [120, 120, 210, 100, 130, 160], // dummy data
+            backgroundColor: "rgba(75, 192, 192, 0.6)"
+          },
+          {
+            label: "Councillors",
+            data: [900, 800, 1200, 600, 750, 880], // dummy data
+            backgroundColor: "rgba(153, 102, 255, 0.6)"
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: { display: true, text: "Political Representation per Senatorial Zone" }
+        },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true, beginAtZero: true }
+        }
+      }
+    });
+  </script>
 </body>
 </html>
