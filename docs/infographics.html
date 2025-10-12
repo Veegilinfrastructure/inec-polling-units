@@ -4,20 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Infographics | Veegil Election</title>
+
+  <!-- External Libraries -->
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://d3js.org/topojson.v1.min.js"></script>
-  <script>
-    fetch("nigeria_states.topojson")
-      .then(response => response.json())
-      .then(topoData => {
-        const geojsonData = topojson.feature(topoData, topoData.objects.states);
-        L.geoJSON(geojsonData).addTo(map);
-      });
-  </script>
   <script src="https://unpkg.com/topojson-client@3"></script>
+
   <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: #003366;
+      color: white;
+      padding: 12px 24px;
+    }
+    header h1 { margin: 0; font-size: 1.8rem; }
+    nav a {
+      color: white;
+      margin-right: 16px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    main { padding: 24px; }
+    h2 { color: #003366; }
+
+    /* Infographic Layout */
     .infographics-container {
       display: flex;
       flex-wrap: wrap;
@@ -38,10 +56,14 @@
       padding: 16px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
+
+    /* Map Styling */
     #zoneMap {
       width: 100%;
-      height: 600px;
+      height: auto;
+      aspect-ratio: 16 / 10;
       border: 1px solid #ccc;
     }
     .zone {
@@ -49,6 +71,7 @@
       stroke: #333;
       stroke-width: 0.7px;
       cursor: pointer;
+      transition: fill 0.2s ease;
     }
     .zone:hover { fill: orange; }
     .zone.selected { fill: red; }
@@ -56,15 +79,37 @@
       pointer-events: none;
       font-size: 12px;
       text-anchor: middle;
+      dominant-baseline: middle;
       fill: black;
     }
+
+    /* Legend and Tooltip */
     .legend {
       margin-top: 10px;
       background: white;
-      padding: 5px;
+      padding: 10px;
       border: 1px solid #666;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 14px;
+      max-width: 90%;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+    .tooltip {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #aaa;
+      padding: 6px 10px;
+      border-radius: 4px;
+      pointer-events: none;
+      font-size: 13px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+      .infographics-container {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -86,27 +131,27 @@
     <!-- External Map Link -->
     <section>
       <h2>Interactive Political Map</h2>
-      <p>Click the link below to plot maps of any political office in Nigeria:</p>
+      <p>Click below to plot maps of any political office in Nigeria:</p>
       <p>
-        <a href="https://nigeria-maps-plotter.onrender.com/" target="_blank" style="color:blue; font-weight:bold; text-decoration:underline;">
-          Open Nigeria Maps Plotter
+        <a href="https://nigeria-maps-plotter.onrender.com/" target="_blank"
+           style="color:blue; font-weight:bold; text-decoration:underline;">
+           Open Nigeria Maps Plotter
         </a>
       </p>
     </section>
 
-    <!-- Side by side: Static Map + Chart -->
+    <!-- Static Map + Chart -->
     <section>
       <h2>Nigeria Geopolitical Map & Representation</h2>
       <div class="infographics-container">
         <img src="images/nigeria_geopolitics.png" alt="Nigeria Geopolitical Map">
-
         <div class="chart-container">
-          <canvas id="representationChart"></canvas>
+          <canvas id="representationChart" aria-label="Political representation by geopolitical zone" role="img"></canvas>
         </div>
       </div>
     </section>
 
-    <!-- Integrated D3 Map -->
+    <!-- Interactive Map -->
     <section>
       <h2>Interactive Zoomable Map by Geopolitical Zone</h2>
       <div class="map-container">
@@ -117,9 +162,9 @@
   </main>
 
   <script>
-    // === Chart.js section ===
+    // ===== Chart.js Visualization =====
     const ctx = document.getElementById('representationChart').getContext('2d');
-    const representationChart = new Chart(ctx, {
+    new Chart(ctx, {
       type: 'bar',
       data: {
         labels: ["North Central", "North East", "North West", "South East", "South South", "South West"],
@@ -144,7 +189,7 @@
       }
     });
 
-    // === D3.js map integration section ===
+    // ===== D3.js Interactive Map =====
     const zoneData = {
       "North Central": { Governors: 6, Senators: 18, HouseReps: 50, HouseAssembly: 120, Councillors: 900 },
       "North East": { Governors: 6, Senators: 18, HouseReps: 48, HouseAssembly: 120, Councillors: 800 },
@@ -178,13 +223,19 @@
     const g = svg.append("g");
     const path = d3.geoPath();
 
+    const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("display", "none");
+
     d3.json("nigeria_states.topojson").then(topodata => {
-      const states = topojson.feature(topodata, topodata.objects.states).features;
+      const objectKey = Object.keys(topodata.objects)[0];
+      const states = topojson.feature(topodata, topodata.objects[objectKey]).features;
       states.forEach(s => {
         const name = s.properties.name || s.properties.STATE_NAME || s.properties.STATE;
         s.properties.stateName = name;
         s.properties.zone = stateToZone[name];
       });
+
       const zoneGroups = {};
       states.forEach(s => {
         const z = s.properties.zone;
@@ -192,17 +243,26 @@
         if (!zoneGroups[z]) zoneGroups[z] = [];
         zoneGroups[z].push(s);
       });
+
       const zoneFeatures = Object.entries(zoneGroups).map(([zoneName, stateList]) => {
-        const geometry = topojson.merge(topodata, stateList.map(s => s));
-        return { type: "Feature", properties: { zone: zoneName }, geometry: geometry };
+        const merged = topojson.merge(topodata, stateList.map(s => s));
+        return { type: "Feature", properties: { zone: zoneName }, geometry: merged };
       });
-      const zonePaths = g.selectAll(".zone")
+
+      const zoneGroup = g.append("g").attr("class", "zones");
+      const zonePaths = zoneGroup.selectAll(".zone")
         .data(zoneFeatures).enter().append("path")
         .attr("class", "zone")
         .attr("d", path)
-        .on("click", zoneClicked);
+        .on("click", zoneClicked)
+        .on("mousemove", (event, d) => {
+          tooltip.style("display", "block")
+            .style("left", event.pageX + 10 + "px")
+            .style("top", event.pageY - 20 + "px")
+            .text(d.properties.zone);
+        })
+        .on("mouseout", () => tooltip.style("display", "none"));
 
-      zonePaths.append("title").text(d => d.properties.zone);
       g.selectAll(".zone-label")
         .data(zoneFeatures).enter().append("text")
         .attr("class", "zone-label")
@@ -210,7 +270,7 @@
         .text(d => d.properties.zone);
 
       g.append("path")
-        .datum(topojson.mesh(topodata, topodata.objects.states, (a, b) => a !== b))
+        .datum(topojson.mesh(topodata, topodata.objects[objectKey], (a, b) => a !== b))
         .attr("fill", "none")
         .attr("stroke", "#999")
         .attr("stroke-linejoin", "round")
@@ -269,5 +329,3 @@
   </script>
 </body>
 </html>
-
-
