@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Nigeria Political Infographics</title>
 
-<!-- Leaflet & D3 CDNs -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<!-- Leaflet & D3 via CDN -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://unpkg.com/topojson-client@3"></script>
@@ -28,14 +31,14 @@
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 1rem;
+    gap: 1rem;
   }
 
   #map {
     width: 48%;
     height: 550px;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
 
   #chart {
@@ -43,12 +46,13 @@
     height: 550px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 1rem;
   }
 
   @media (max-width: 900px) {
-    #map, #chart {
+    #map,
+    #chart {
       width: 100%;
       height: 400px;
     }
@@ -56,7 +60,7 @@
 
   .tooltip {
     position: absolute;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.75);
     color: white;
     padding: 6px 10px;
     border-radius: 6px;
@@ -66,9 +70,7 @@
 </style>
 </head>
 <body>
-
 <h2>🇳🇬 Nigeria Political Infographics</h2>
-
 <div id="container">
   <div id="map"></div>
   <div id="chart"></div>
@@ -76,29 +78,49 @@
 
 <script>
 // --- Initialize Leaflet Map ---
-const map = L.map("map").setView([9.082, 8.6753], 6);
+const map = L.map("map", {
+  zoomSnap: 0.25,
+  minZoom: 5,
+  maxZoom: 12
+}).setView([9.082, 8.6753], 6);
+
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: "© OpenStreetMap contributors"
+  attribution: "© OpenStreetMap contributors",
 }).addTo(map);
 
 // --- Load Nigeria States TopoJSON ---
 d3.json("nigeria_states.topojson").then(data => {
   const geojson = topojson.feature(data, data.objects.states);
-  
-  L.geoJSON(geojson, {
-    style: {
-      color: "#333",
-      weight: 1,
-      fillColor: "#00853f",
-      fillOpacity: 0.4
-    },
-    onEachFeature: (feature, layer) => {
-      layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
-      layer.on({
-        mouseover: e => e.target.setStyle({ fillOpacity: 0.7 }),
-        mouseout: e => e.target.setStyle({ fillOpacity: 0.4 })
-      });
-    }
+
+  const defaultStyle = {
+    color: "#333",
+    weight: 1,
+    fillColor: "#00853f",
+    fillOpacity: 0.4
+  };
+
+  const highlightStyle = {
+    weight: 2,
+    color: "#000",
+    fillOpacity: 0.7
+  };
+
+  function onEachFeature(feature, layer) {
+    const stateName = feature.properties.name;
+    layer.bindTooltip(`<b>${stateName}</b>`, { direction: "auto" });
+
+    layer.on({
+      mouseover: (e) => e.target.setStyle(highlightStyle),
+      mouseout: (e) => geojsonLayer.resetStyle(e.target),
+      click: (e) => {
+        map.fitBounds(e.target.getBounds());
+      }
+    });
+  }
+
+  const geojsonLayer = L.geoJSON(geojson, {
+    style: defaultStyle,
+    onEachFeature: onEachFeature
   }).addTo(map);
 });
 
