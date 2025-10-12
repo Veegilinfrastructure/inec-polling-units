@@ -7,6 +7,15 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/topojson.v1.min.js"></script>
+  <script>
+    fetch("geojson/nigeria_states.topojson")
+      .then(response => response.json())
+      .then(topoData => {
+        const geojsonData = topojson.feature(topoData, topoData.objects.states);
+        L.geoJSON(geojsonData).addTo(map);
+      });
+  </script>
   <script src="https://unpkg.com/topojson-client@3"></script>
   <style>
     .infographics-container {
@@ -260,3 +269,4 @@
   </script>
 </body>
 </html>
+
