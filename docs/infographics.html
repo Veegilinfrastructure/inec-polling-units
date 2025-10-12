@@ -91,7 +91,7 @@ const stateToZone = {
 };
 
 // ============ Load & Draw ============
-d3.json("geojson/nigeria_states.topojson").then(data => {
+d3.json("nigeria_states.topojson").then(data => {
   // find first object key dynamically
   const objectKey = Object.keys(data.objects)[0];
   const geojson = topojson.feature(data, data.objects[objectKey]);
@@ -129,3 +129,4 @@ d3.json("geojson/nigeria_states.topojson").then(data => {
 </script>
 </body>
 </html>
+
