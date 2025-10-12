@@ -9,7 +9,7 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://d3js.org/topojson.v1.min.js"></script>
   <script>
-    fetch("geojson/nigeria_states.topojson")
+    fetch("nigeria_states.topojson")
       .then(response => response.json())
       .then(topoData => {
         const geojsonData = topojson.feature(topoData, topoData.objects.states);
@@ -269,4 +269,5 @@
   </script>
 </body>
 </html>
+
 
