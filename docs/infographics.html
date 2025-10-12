@@ -5,6 +5,7 @@
 <title>Nigeria Geopolitical Zones – D3 Choropleth</title>
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://unpkg.com/topojson-client@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   body {
     font-family: "Segoe UI", sans-serif;
@@ -15,16 +16,23 @@
     text-align: center;
     margin-top: 20px;
   }
-  .map-container {
+  .map-container, .chart-container {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
   }
   svg {
     width: 90%;
-    height: 700px;
+    height: 600px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  canvas {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 20px;
   }
   .tooltip {
     position: absolute;
@@ -38,20 +46,27 @@
 </style>
 </head>
 <body>
+
 <h2>Nigeria – D3 Choropleth Map (by Geopolitical Zone)</h2>
+
 <div class="map-container">
   <svg id="map"></svg>
 </div>
 <div class="tooltip" id="tooltip" style="opacity:0;"></div>
 
+<h2>Political Representation by Zone</h2>
+<div class="chart-container">
+  <canvas id="zoneChart" width="900" height="450"></canvas>
+</div>
+
 <script>
 // ============ Configuration ============
-const width = 900, height = 700;
+const width = 900, height = 600;
 const svg = d3.select("#map");
 const tooltip = d3.select("#tooltip");
 
 const projection = d3.geoMercator()
-  .center([8.6753, 9.0820])  // Nigeria center
+  .center([8.6753, 9.0820]) // Nigeria center
   .scale(3500)
   .translate([width/2, height/2]);
 
@@ -92,7 +107,6 @@ const stateToZone = {
 
 // ============ Load & Draw ============
 d3.json("geojson/nigeria_states.topojson").then(data => {
-  // find first object key dynamically
   const objectKey = Object.keys(data.objects)[0];
   const geojson = topojson.feature(data, data.objects[objectKey]);
 
@@ -102,32 +116,59 @@ d3.json("geojson/nigeria_states.topojson").then(data => {
     .append("path")
     .attr("d", path)
     .attr("fill", d => {
-      const zone = stateToZone[d.properties.admin1Name || d.properties.name];
+      const stateName = d.properties.STATE_NAME || d.properties.name || d.properties.State;
+      const zone = stateToZone[stateName?.trim()] || "Unknown";
       return zoneColor[zone] || "#ccc";
     })
     .attr("stroke", "#333")
     .attr("stroke-width", 0.5)
     .on("mouseover", (event, d) => {
-      const state = d.properties.admin1Name || d.properties.name;
-      const zone = stateToZone[state];
-      const zdata = zoneData[zone];
+      const stateName = d.properties.STATE_NAME || d.properties.name || d.properties.State;
+      const zone = stateToZone[stateName?.trim()] || "Unknown";
+      const zdata = zoneData[zone] || {};
       tooltip.transition().duration(200).style("opacity", 0.9);
       tooltip.html(`
-        <strong>${state}</strong><br>
+        <strong>${stateName}</strong><br>
         Zone: ${zone}<br>
-        Governors: ${zdata?.governors ?? "N/A"}<br>
-        Senators: ${zdata?.senators ?? "N/A"}<br>
-        Reps: ${zdata?.reps ?? "N/A"}<br>
-        Assembly: ${zdata?.assembly ?? "N/A"}<br>
-        Councillors: ${zdata?.councillors ?? "N/A"}
+        Governors: ${zdata.governors ?? "N/A"}<br>
+        Senators: ${zdata.senators ?? "N/A"}<br>
+        Reps: ${zdata.reps ?? "N/A"}<br>
+        Assembly: ${zdata.assembly ?? "N/A"}<br>
+        Councillors: ${zdata.councillors ?? "N/A"}
       `)
       .style("left", (event.pageX + 15) + "px")
       .style("top", (event.pageY - 30) + "px");
     })
     .on("mouseout", () => tooltip.transition().duration(300).style("opacity", 0));
 });
+
+// ============ Chart.js: Representation by Zone ============
+const ctx = document.getElementById('zoneChart').getContext('2d');
+const labels = Object.keys(zoneData);
+const datasets = [
+  { label: "Governors", data: labels.map(z => zoneData[z].governors), backgroundColor: "#ff6384" },
+  { label: "Senators", data: labels.map(z => zoneData[z].senators), backgroundColor: "#36a2eb" },
+  { label: "House of Reps", data: labels.map(z => zoneData[z].reps), backgroundColor: "#ffcd56" },
+  { label: "Assembly", data: labels.map(z => zoneData[z].assembly), backgroundColor: "#4bc0c0" },
+  { label: "Councillors", data: labels.map(z => zoneData[z].councillors), backgroundColor: "#9966ff" }
+];
+
+new Chart(ctx, {
+  type: 'bar',
+  data: { labels, datasets },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'top' },
+      title: { display: true, text: 'Political Representation by Geopolitical Zone' }
+    },
+    scales: {
+      x: { stacked: true },
+      y: { stacked: true, beginAtZero: true }
+    }
+  }
+});
 </script>
+
 </body>
 </html>
-
-
