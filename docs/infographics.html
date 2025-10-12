@@ -1,247 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Infographics | Veegil Election</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nigeria Political Infographics</title>
 
-  <!-- Leaflet & D3 CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://unpkg.com/topojson-client@3"></script>
+<!-- Leaflet & D3 CDNs -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3"></script>
 
-  <!-- Styles -->
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f8f9fa;
-      color: #222;
-    }
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f7f7f7;
+  }
 
-    header {
-      background: #004aad;
-      color: white;
-      padding: 1em 2em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+  h2 {
+    text-align: center;
+    margin-top: 1rem;
+  }
 
-    header h1 {
-      margin: 0;
-      font-size: 1.6em;
-    }
+  #container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 1rem;
+  }
 
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 0.6em;
-      font-weight: bold;
-    }
+  #map {
+    width: 48%;
+    height: 550px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+  }
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+  #chart {
+    width: 48%;
+    height: 550px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1rem;
+  }
 
-    main {
-      padding: 1.5em 2em;
-    }
-
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-    }
-
-    .chart-section, .image-section {
-      flex: 1 1 45%;
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .image-section img {
+  @media (max-width: 900px) {
+    #map, #chart {
       width: 100%;
-      border-radius: 8px;
+      height: 400px;
     }
+  }
 
-    h2 {
-      color: #004aad;
-    }
-
-    .external-link {
-      text-align: center;
-      margin: 30px 0;
-    }
-
-    .external-link a {
-      background: #004aad;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    .external-link a:hover {
-      background: #002f73;
-    }
-
-    /* Tooltip */
-    .tooltip {
-      position: absolute;
-      text-align: center;
-      padding: 8px;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.75);
-      color: white;
-      border-radius: 4px;
-      pointer-events: none;
-      opacity: 0;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .chart-section, .image-section {
-        flex: 1 1 100%;
-      }
-    }
-  </style>
+  .tooltip {
+    position: absolute;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+    font-size: 13px;
+  }
+</style>
 </head>
-
 <body>
-  <header>
-    <h1>Infographics</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="maps.html">Maps</a>
-      <a href="infographics.html">Infographics</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
 
-  <main>
-    <section class="external-link">
-      <h2>Explore Interactive Election Map</h2>
-      <p>Click below to plot maps of any political office in Nigeria.</p>
-      <a href="https://nigeria-maps-plotter.onrender.com/" target="_blank">
-        Open Interactive Map
-      </a>
-    </section>
+<h2>🇳🇬 Nigeria Political Infographics</h2>
 
-    <div class="container">
-      <!-- Image Section -->
-      <div class="image-section">
-        <h2>Nigeria Geopolitical Map</h2>
-        <img src="images/nigeria_geopolitics.png" alt="Nigeria Geopolitical Zones Map" />
-      </div>
+<div id="container">
+  <div id="map"></div>
+  <div id="chart"></div>
+</div>
 
-      <!-- Chart Section -->
-      <div class="chart-section">
-        <h2>Political Offices by Geopolitical Zone</h2>
-        <svg id="chart" width="100%" height="400"></svg>
-      </div>
-    </div>
-  </main>
+<script>
+// --- Initialize Leaflet Map ---
+const map = L.map("map").setView([9.082, 8.6753], 6);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "© OpenStreetMap contributors"
+}).addTo(map);
 
-  <div class="tooltip" id="tooltip"></div>
+// --- Load Nigeria States TopoJSON ---
+d3.json("nigeria_states.topojson").then(data => {
+  const geojson = topojson.feature(data, data.objects.states);
+  
+  L.geoJSON(geojson, {
+    style: {
+      color: "#333",
+      weight: 1,
+      fillColor: "#00853f",
+      fillOpacity: 0.4
+    },
+    onEachFeature: (feature, layer) => {
+      layer.bindPopup(`<strong>${feature.properties.name}</strong>`);
+      layer.on({
+        mouseover: e => e.target.setStyle({ fillOpacity: 0.7 }),
+        mouseout: e => e.target.setStyle({ fillOpacity: 0.4 })
+      });
+    }
+  }).addTo(map);
+});
 
-  <script>
-    // --- Sample real data (2023 context) ---
-    const data = [
-      { zone: "North Central", governors: 6, senators: 19, reps: 49, assembly: 228, councillors: 1780 },
-      { zone: "North East", governors: 6, senators: 18, reps: 48, assembly: 190, councillors: 1510 },
-      { zone: "North West", governors: 7, senators: 21, reps: 92, assembly: 243, councillors: 2260 },
-      { zone: "South East", governors: 5, senators: 15, reps: 43, assembly: 160, councillors: 1250 },
-      { zone: "South South", governors: 6, senators: 18, reps: 55, assembly: 220, councillors: 1785 },
-      { zone: "South West", governors: 6, senators: 18, reps: 71, assembly: 210, councillors: 1660 }
-    ];
+// --- D3 Chart Data ---
+const data = [
+  { zone: "North Central", Governors: 6, Senators: 19, Reps: 49, Assembly: 216, Councillors: 768 },
+  { zone: "North East", Governors: 6, Senators: 18, Reps: 48, Assembly: 176, Councillors: 774 },
+  { zone: "North West", Governors: 7, Senators: 21, Reps: 92, Assembly: 216, Councillors: 774 },
+  { zone: "South East", Governors: 5, Senators: 15, Reps: 43, Assembly: 160, Councillors: 774 },
+  { zone: "South South", Governors: 6, Senators: 18, Reps: 55, Assembly: 168, Councillors: 774 },
+  { zone: "South West", Governors: 6, Senators: 18, Reps: 71, Assembly: 176, Councillors: 774 }
+];
 
-    const keys = ["governors", "senators", "reps", "assembly", "councillors"];
-    const colors = d3.scaleOrdinal()
-      .domain(keys)
-      .range(["#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e"]);
+// --- Chart Setup ---
+const chartDiv = document.getElementById("chart");
+const width = chartDiv.clientWidth - 40;
+const height = chartDiv.clientHeight - 60;
 
-    const svg = d3.select("#chart");
-    const margin = { top: 30, right: 30, bottom: 60, left: 70 };
-    const width = parseInt(svg.style("width")) - margin.left - margin.right;
-    const height = parseInt(svg.attr("height")) - margin.top - margin.bottom;
+const svg = d3.select("#chart").append("svg")
+  .attr("width", width)
+  .attr("height", height);
 
-    const chart = svg.append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+const categories = ["Governors", "Senators", "Reps", "Assembly", "Councillors"];
+const colors = d3.scaleOrdinal(d3.schemeTableau10);
 
-    const x = d3.scaleBand()
-      .domain(data.map(d => d.zone))
-      .range([0, width])
-      .padding([0.2]);
+const x0 = d3.scaleBand()
+  .domain(data.map(d => d.zone))
+  .range([60, width - 20])
+  .paddingInner(0.2);
 
-    const y = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d3.max(keys, k => d[k])) * 1.1])
-      .range([height, 0]);
+const x1 = d3.scaleBand()
+  .domain(categories)
+  .range([0, x0.bandwidth()])
+  .padding(0.05);
 
-    chart.append("g")
-      .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-      .attr("transform", "rotate(-20)")
-      .style("text-anchor", "end");
+const y = d3.scaleLinear()
+  .domain([0, d3.max(data, d => d3.max(categories, c => d[c]))])
+  .nice()
+  .range([height - 60, 20]);
 
-    chart.append("g").call(d3.axisLeft(y));
+// --- Axes ---
+svg.append("g")
+  .attr("transform", `translate(0,${height - 60})`)
+  .call(d3.axisBottom(x0))
+  .selectAll("text")
+  .attr("transform", "rotate(-20)")
+  .style("text-anchor", "end");
 
-    const tooltip = d3.select("#tooltip");
+svg.append("g")
+  .attr("transform", "translate(60,0)")
+  .call(d3.axisLeft(y));
 
-    const barGroups = chart.selectAll("g.layer")
-      .data(d3.stack().keys(keys)(data))
-      .join("g")
-      .attr("fill", d => colors(d.key));
+// --- Tooltip ---
+const tooltip = d3.select("body").append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 0);
 
-    barGroups.selectAll("rect")
-      .data(d => d)
-      .join("rect")
-      .attr("x", d => x(d.data.zone))
-      .attr("y", d => y(d[1]))
-      .attr("height", d => y(d[0]) - y(d[1]))
-      .attr("width", x.bandwidth())
-      .on("mousemove", (event, d) => {
-        const [xPos, yPos] = d3.pointer(event);
-        const zone = d.data.zone;
-        const key = event.target.parentNode.__data__.key;
-        const value = d.data[key];
+// --- Draw Bars ---
+svg.append("g")
+  .selectAll("g")
+  .data(data)
+  .join("g")
+    .attr("transform", d => `translate(${x0(d.zone)},0)`)
+  .selectAll("rect")
+  .data(d => categories.map(key => ({ key, value: d[key], zone: d.zone })))
+  .join("rect")
+    .attr("x", d => x1(d.key))
+    .attr("y", d => y(d.value))
+    .attr("width", x1.bandwidth())
+    .attr("height", d => y(0) - y(d.value))
+    .attr("fill", d => colors(d.key))
+    .on("mouseover", (event, d) => {
+      tooltip.transition().duration(150).style("opacity", 1);
+      tooltip.html(`<strong>${d.zone}</strong><br>${d.key}: ${d.value}`)
+        .style("left", (event.pageX + 8) + "px")
+        .style("top", (event.pageY - 30) + "px");
+    })
+    .on("mouseout", () => tooltip.transition().duration(200).style("opacity", 0));
 
-        tooltip
-          .style("opacity", 1)
-          .style("left", `${xPos + margin.left + 20}px`)
-          .style("top", `${yPos + margin.top}px`)
-          .html(`<strong>${zone}</strong><br>${key}: ${value}`);
-      })
-      .on("mouseleave", () => tooltip.style("opacity", 0));
+// --- Legend ---
+const legend = svg.append("g")
+  .attr("transform", `translate(${width - 150},20)`);
 
-    const legend = svg.append("g")
-      .attr("transform", `translate(${margin.left},${margin.top / 2})`);
-
-    keys.forEach((key, i) => {
-      legend.append("rect")
-        .attr("x", i * 120)
-        .attr("width", 15)
-        .attr("height", 15)
-        .attr("fill", colors(key));
-
-      legend.append("text")
-        .attr("x", i * 120 + 20)
-        .attr("y", 12)
-        .text(key)
-        .attr("font-size", "13px");
-    });
-  </script>
+categories.forEach((key, i) => {
+  const g = legend.append("g").attr("transform", `translate(0,${i * 20})`);
+  g.append("rect").attr("width", 14).attr("height", 14).attr("fill", colors(key));
+  g.append("text").attr("x", 20).attr("y", 10).text(key).style("font-size", "12px");
+});
+</script>
 </body>
 </html>
