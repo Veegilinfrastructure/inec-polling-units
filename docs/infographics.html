@@ -1,249 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nigeria Political Infographics | D3 Choropleth Map</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nigeria Political Infographics | D3 Choropleth Map</title>
 
-  <!-- Chart.js & D3.js from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://unpkg.com/topojson-client@3"></script>
+<!-- Libraries from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f8f9fa;
-    }
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f8f9fa;
+  }
 
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-    nav a {
-      margin: 0 8px;
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-    }
+  nav a {
+    margin: 0 8px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+  }
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+  nav a:hover {
+    text-decoration: underline;
+  }
 
-    .infographics-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: flex-start;
-      justify-content: center;
-      margin-top: 20px;
-    }
+  .infographics-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 20px;
+  }
 
-    .chart-container, .map-container {
-      background: #fff;
-      padding: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      flex: 1;
-      min-width: 450px;
-    }
+  .chart-container, .map-container {
+    background: #fff;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 450px;
+  }
 
-    svg {
-      width: 100%;
-      height: 600px;
-      border-radius: 8px;
-    }
+  svg {
+    width: 100%;
+    height: 600px;
+    border-radius: 8px;
+  }
 
-    .tooltip {
-      position: absolute;
-      background: rgba(0,0,0,0.75);
-      color: white;
-      padding: 6px 10px;
-      border-radius: 4px;
-      pointer-events: none;
-      font-size: 13px;
-    }
+  .tooltip {
+    position: absolute;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    pointer-events: none;
+    font-size: 13px;
+  }
 
-    h2 {
-      color: #333;
-      text-align: center;
-    }
+  h2 {
+    color: #333;
+    text-align: center;
+  }
 
-    #legend {
-      text-align: center;
-      margin-top: 10px;
-    }
+  #legend {
+    text-align: center;
+    margin-top: 10px;
+  }
 
-    .legend-item {
-      display: inline-block;
-      margin-right: 10px;
-    }
+  .legend-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
 
-    .legend-color {
-      width: 15px;
-      height: 15px;
-      display: inline-block;
-      margin-right: 5px;
-      vertical-align: middle;
-    }
-  </style>
+  .legend-color {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>Interactive Nigeria Political Infographics</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="maps.html">Maps</a>
-      <a href="infographics.html">Infographics</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
 
-  <main>
-    <p style="text-align:center;">
-      Explore interactive charts and maps showing Nigeria’s political representation by geopolitical zone.
+<header>
+  <h1>Interactive Nigeria Political Infographics</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="maps.html">Maps</a>
+    <a href="infographics.html">Infographics</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <p style="text-align:center;">
+    Explore interactive charts and maps showing Nigeria’s political representation by geopolitical zone.
+  </p>
+
+  <!-- External Map Link -->
+  <section style="text-align:center;">
+    <h2>Interactive Political Map</h2>
+    <p>
+      <a href="https://nigeria-maps-plotter.onrender.com/" target="_blank" 
+         style="color:blue; font-weight:bold; text-decoration:underline;">
+        Open Nigeria Maps Plotter
+      </a>
     </p>
+  </section>
 
-    <!-- External Map Link -->
-    <section style="text-align:center;">
-      <h2>Interactive Political Map</h2>
-      <p>
-        <a href="https://nigeria-maps-plotter.onrender.com/" target="_blank" 
-           style="color:blue; font-weight:bold; text-decoration:underline;">
-          Open Nigeria Maps Plotter
-        </a>
-      </p>
-    </section>
-
-    <!-- Side by side: D3 Choropleth + Chart -->
-    <section>
-      <h2>Nigeria Geopolitical Zones — Choropleth Map & Chart</h2>
-      <div class="infographics-container">
-        <div class="map-container">
-          <svg id="nigeriaMap"></svg>
-          <div id="legend"></div>
-        </div>
-
-        <div class="chart-container">
-          <canvas id="representationChart"></canvas>
-        </div>
+  <!-- Side by side: D3 Choropleth + Chart -->
+  <section>
+    <h2>Nigeria Geopolitical Zones — Choropleth Map & Chart</h2>
+    <div class="infographics-container">
+      <div class="map-container">
+        <svg id="nigeriaMap"></svg>
+        <div id="legend"></div>
       </div>
-    </section>
-  </main>
 
-  <div id="tooltip" class="tooltip" style="opacity:0;"></div>
+      <div class="chart-container">
+        <canvas id="representationChart"></canvas>
+      </div>
+    </div>
+  </section>
+</main>
 
-  <script>
-    // === Data for Geopolitical Zones ===
-    const zoneData = {
-      "North Central": { Governors: 6, Senators: 18, HouseReps: 50, HouseAssembly: 120, Councillors: 900 },
-      "North East":    { Governors: 6, Senators: 18, HouseReps: 48, HouseAssembly: 120, Councillors: 800 },
-      "North West":    { Governors: 7, Senators: 21, HouseReps: 92, HouseAssembly: 210, Councillors: 1200 },
-      "South East":    { Governors: 5, Senators: 15, HouseReps: 43, HouseAssembly: 100, Councillors: 600 },
-      "South South":   { Governors: 6, Senators: 18, HouseReps: 55, HouseAssembly: 130, Councillors: 750 },
-      "South West":    { Governors: 6, Senators: 18, HouseReps: 71, HouseAssembly: 160, Councillors: 880 }
-    };
+<div id="tooltip" class="tooltip" style="opacity:0;"></div>
 
-    const stateToZone = {
-      "Abia": "South East", "Adamawa": "North East", "Akwa Ibom": "South South", "Anambra": "South East",
-      "Bauchi": "North East", "Bayelsa": "South South", "Benue": "North Central", "Borno": "North East",
-      "Cross River": "South South", "Delta": "South South", "Ebonyi": "South East", "Edo": "South South",
-      "Ekiti": "South West", "Enugu": "South East", "Gombe": "North East", "Imo": "South East",
-      "Jigawa": "North West", "Kaduna": "North West", "Kano": "North West", "Katsina": "North West",
-      "Kebbi": "North West", "Kogi": "North Central", "Kwara": "North Central", "Lagos": "South West",
-      "Nasarawa": "North Central", "Niger": "North Central", "Ogun": "South West", "Ondo": "South West",
-      "Osun": "South West", "Oyo": "South West", "Plateau": "North Central", "Rivers": "South South",
-      "Sokoto": "North West", "Taraba": "North East", "Yobe": "North East", "Zamfara": "North West", "Abuja Federal Capital Territory": "North Central"
-    };
+<script>
+/* === Political data === */
+const zoneData = {
+  "North Central": { Governors: 6, Senators: 18, HouseReps: 50, HouseAssembly: 120, Councillors: 900 },
+  "North East":    { Governors: 6, Senators: 18, HouseReps: 48, HouseAssembly: 120, Councillors: 800 },
+  "North West":    { Governors: 7, Senators: 21, HouseReps: 92, HouseAssembly: 210, Councillors: 1200 },
+  "South East":    { Governors: 5, Senators: 15, HouseReps: 43, HouseAssembly: 100, Councillors: 600 },
+  "South South":   { Governors: 6, Senators: 18, HouseReps: 55, HouseAssembly: 130, Councillors: 750 },
+  "South West":    { Governors: 6, Senators: 18, HouseReps: 71, HouseAssembly: 160, Councillors: 880 }
+};
 
-    // === D3 Choropleth Map ===
-    const width = 800, height = 600;
-    const svg = d3.select("#nigeriaMap")
-      .attr("viewBox", [0, 0, width, height])
-      .attr("preserveAspectRatio", "xMidYMid meet");
+const stateToZone = {
+  "Abia": "South East", "Adamawa": "North East", "Akwa Ibom": "South South", "Anambra": "South East",
+  "Bauchi": "North East", "Bayelsa": "South South", "Benue": "North Central", "Borno": "North East",
+  "Cross River": "South South", "Delta": "South South", "Ebonyi": "South East", "Edo": "South South",
+  "Ekiti": "South West", "Enugu": "South East", "Gombe": "North East", "Imo": "South East",
+  "Jigawa": "North West", "Kaduna": "North West", "Kano": "North West", "Katsina": "North West",
+  "Kebbi": "North West", "Kogi": "North Central", "Kwara": "North Central", "Lagos": "South West",
+  "Nasarawa": "North Central", "Niger": "North Central", "Ogun": "South West", "Ondo": "South West",
+  "Osun": "South West", "Oyo": "South West", "Plateau": "North Central", "Rivers": "South South",
+  "Sokoto": "North West", "Taraba": "North East", "Yobe": "North East", "Zamfara": "North West",
+  "FCT": "North Central"
+};
 
-    const tooltip = d3.select("#tooltip");
-    const projection = d3.geoMercator().scale(2500).center([8, 9]).translate([width / 2, height / 1.5]);
-    const path = d3.geoPath(projection);
+/* === Embedded simplified Nigeria GeoJSON (small polygon outlines) === */
+const nigeriaGeoJSON = {
+  "type": "FeatureCollection",
+  "features": [
+    { "type":"Feature","properties":{"name":"Abia"},"geometry":{"type":"Polygon","coordinates":[[[7.4,5.3],[7.7,5.3],[7.7,5.7],[7.4,5.7],[7.4,5.3]]]}},
+    { "type":"Feature","properties":{"name":"Lagos"},"geometry":{"type":"Polygon","coordinates":[[[3.1,6.3],[3.7,6.3],[3.7,6.7],[3.1,6.7],[3.1,6.3]]]}},
+    { "type":"Feature","properties":{"name":"Kano"},"geometry":{"type":"Polygon","coordinates":[[[8.2,11.3],[8.9,11.3],[8.9,12.1],[8.2,12.1],[8.2,11.3]]]}},
+    { "type":"Feature","properties":{"name":"Rivers"},"geometry":{"type":"Polygon","coordinates":[[[6.7,4.5],[7.3,4.5],[7.3,5.0],[6.7,5.0],[6.7,4.5]]]}},
+    { "type":"Feature","properties":{"name":"Kaduna"},"geometry":{"type":"Polygon","coordinates":[[[7.1,9.5],[7.9,9.5],[7.9,10.3],[7.1,10.3],[7.1,9.5]]]}},
+    { "type":"Feature","properties":{"name":"Oyo"},"geometry":{"type":"Polygon","coordinates":[[[3.8,7.2],[4.6,7.2],[4.6,8.1],[3.8,8.1],[3.8,7.2]]]}},
+    { "type":"Feature","properties":{"name":"Enugu"},"geometry":{"type":"Polygon","coordinates":[[[7.3,6.2],[7.7,6.2],[7.7,6.8],[7.3,6.8],[7.3,6.2]]]}},
+    { "type":"Feature","properties":{"name":"Katsina"},"geometry":{"type":"Polygon","coordinates":[[[7.1,12.3],[8.0,12.3],[8.0,13.1],[7.1,13.1],[7.1,12.3]]]}},
+    { "type":"Feature","properties":{"name":"Cross River"},"geometry":{"type":"Polygon","coordinates":[[[8.1,4.5],[8.9,4.5],[8.9,5.7],[8.1,5.7],[8.1,4.5]]]}},
+    { "type":"Feature","properties":{"name":"Borno"},"geometry":{"type":"Polygon","coordinates":[[[12.0,10.0],[13.5,10.0],[13.5,12.5],[12.0,12.5],[12.0,10.0]]]}},
+  ]
+};
 
-    const color = d3.scaleSequential(d3.interpolateYlGnBu)
-      .domain([500, 1200]); // based on Councillors count
+/* === Choropleth Map === */
+const width = 800, height = 600;
+const svg = d3.select("#nigeriaMap")
+  .attr("viewBox", [0, 0, width, height])
+  .attr("preserveAspectRatio", "xMidYMid meet");
 
-    d3.json("nigeria_states.topojson").then(topoData => {
-      const states = topojson.feature(topoData, topoData.objects.states).features;
+const tooltip = d3.select("#tooltip");
+const projection = d3.geoMercator().scale(3000).center([8, 9]).translate([width / 2, height / 1.5]);
+const path = d3.geoPath(projection);
+const color = d3.scaleSequential(d3.interpolateYlGnBu).domain([500, 1200]);
 
-      states.forEach(s => {
-        const name = s.properties.name || s.properties.STATE_NAME || s.properties.STATE;
-        const zone = stateToZone[name];
-        s.properties.zone = zone;
-        s.properties.data = zoneData[zone];
-      });
+const states = nigeriaGeoJSON.features;
+states.forEach(s => {
+  const name = s.properties.name;
+  const zone = stateToZone[name];
+  s.properties.zone = zone;
+  s.properties.data = zoneData[zone];
+});
 
-      svg.selectAll("path")
-        .data(states)
-        .join("path")
-        .attr("d", path)
-        .attr("fill", d => d.properties.data ? color(d.properties.data.Councillors) : "#ccc")
-        .attr("stroke", "#333")
-        .attr("stroke-width", 0.7)
-        .on("mouseover", (event, d) => {
-          const { zone, data } = d.properties;
-          tooltip.transition().duration(200).style("opacity", 0.9);
-          tooltip.html(`
-            <strong>${d.properties.name}</strong><br>
-            Zone: ${zone}<br>
-            Governors: ${data.Governors}<br>
-            Senators: ${data.Senators}<br>
-            Reps: ${data.HouseReps}<br>
-            Assembly: ${data.HouseAssembly}<br>
-            Councillors: ${data.Councillors}
-          `)
-          .style("left", (event.pageX + 10) + "px")
-          .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", () => tooltip.transition().duration(300).style("opacity", 0));
+svg.selectAll("path")
+  .data(states)
+  .join("path")
+  .attr("d", path)
+  .attr("fill", d => d.properties.data ? color(d.properties.data.Councillors) : "#ccc")
+  .attr("stroke", "#333")
+  .attr("stroke-width", 0.7)
+  .on("mouseover", (event, d) => {
+    const { zone, data } = d.properties;
+    tooltip.transition().duration(200).style("opacity", 0.9);
+    tooltip.html(`
+      <strong>${d.properties.name}</strong><br>
+      Zone: ${zone}<br>
+      Governors: ${data.Governors}<br>
+      Senators: ${data.Senators}<br>
+      Reps: ${data.HouseReps}<br>
+      Assembly: ${data.HouseAssembly}<br>
+      Councillors: ${data.Councillors}
+    `)
+    .style("left", (event.pageX + 10) + "px")
+    .style("top", (event.pageY - 28) + "px");
+  })
+  .on("mouseout", () => tooltip.transition().duration(300).style("opacity", 0));
 
-      // Legend
-      const legend = d3.select("#legend");
-      const legendColors = [500, 700, 900, 1100, 1200];
-      legend.selectAll(".legend-item")
-        .data(legendColors)
-        .enter()
-        .append("div")
-        .attr("class", "legend-item")
-        .html(d => `<span class="legend-color" style="background:${color(d)}"></span> ${d}`);
-    });
+/* === Legend === */
+const legend = d3.select("#legend");
+[500,700,900,1100,1200].forEach(d => {
+  legend.append("div")
+    .attr("class", "legend-item")
+    .html(`<span class="legend-color" style="background:${color(d)}"></span> ${d}`);
+});
 
-    // === Chart.js bar chart ===
-    const ctx = document.getElementById('representationChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: Object.keys(zoneData),
-        datasets: [
-          { label: "Governors", data: Object.values(zoneData).map(d => d.Governors), backgroundColor: "rgba(255,99,132,0.6)" },
-          { label: "Senators", data: Object.values(zoneData).map(d => d.Senators), backgroundColor: "rgba(54,162,235,0.6)" },
-          { label: "House of Reps", data: Object.values(zoneData).map(d => d.HouseReps), backgroundColor: "rgba(255,206,86,0.6)" },
-          { label: "House of Assembly", data: Object.values(zoneData).map(d => d.HouseAssembly), backgroundColor: "rgba(75,192,192,0.6)" },
-          { label: "Councillors", data: Object.values(zoneData).map(d => d.Councillors), backgroundColor: "rgba(153,102,255,0.6)" }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: "top" },
-          title: { display: true, text: "Representation by Geopolitical Zone" }
-        },
-        scales: {
-          x: { stacked: true },
-          y: { stacked: true, beginAtZero: true }
-        }
-      }
-    });
-  </script>
+/* === Chart.js stacked bar chart === */
+const ctx = document.getElementById('representationChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: Object.keys(zoneData),
+    datasets: [
+      { label: "Governors", data: Object.values(zoneData).map(d => d.Governors), backgroundColor: "rgba(255,99,132,0.6)" },
+      { label: "Senators", data: Object.values(zoneData).map(d => d.Senators), backgroundColor: "rgba(54,162,235,0.6)" },
+      { label: "House of Reps", data: Object.values(zoneData).map(d => d.HouseReps), backgroundColor: "rgba(255,206,86,0.6)" },
+      { label: "House of Assembly", data: Object.values(zoneData).map(d => d.HouseAssembly), backgroundColor: "rgba(75,192,192,0.6)" },
+      { label: "Councillors", data: Object.values(zoneData).map(d => d.Councillors), backgroundColor: "rgba(153,102,255,0.6)" }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: "top" },
+      title: { display: true, text: "Representation by Geopolitical Zone" }
+    },
+    scales: {
+      x: { stacked: true },
+      y: { stacked: true, beginAtZero: true }
+    }
+  }
+});
+</script>
+
 </body>
 </html>
-
